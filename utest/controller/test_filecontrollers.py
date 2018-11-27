@@ -71,6 +71,7 @@ class TestCaseFileControllerTest(unittest.TestCase):
 
     def setUp(self):
         self.ctrl = TestCaseFileController(TestCaseFile(source=self.SOURCE_HTML))
+        print("DEBUG: test filecontrollers Setup ctrl=%s" % repr(self.ctrl))
 
     def test_creation(self):
         for st in self.ctrl.settings:
