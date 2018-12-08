@@ -93,7 +93,6 @@ def find_from_pythonpath(name):
 
 
 def replace_extension(path, new_extension):
-    print("DEBUG: utils replace_extension  path=%s ext=%s" % (path, new_extension))
     base = path.rsplit('.', 1)
     return '%s.%s' % (base[0], new_extension.lower())
 
