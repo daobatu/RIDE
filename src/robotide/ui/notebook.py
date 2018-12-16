@@ -14,23 +14,31 @@
 #  limitations under the License.
 
 try:
-    from wx.lib.agw import flatnotebook as fnb
+    # from wx.lib.agw import flatnotebook as fnb
+    import wx.lib.agw.aui as aui
 except ImportError:
-    from wx.lib import flatnotebook as fnb
+    # from wx.lib import flatnotebook as fnb
+    import wx.lib.aui as aui
+
+from wx import (Point, Size)
 
 from robotide.publish import RideNotebookTabChanging, RideNotebookTabChanged
 
 
-class NoteBook(fnb.FlatNotebook):
+#class NoteBook(fnb.FlatNotebook):
+class NoteBook(aui.AuiNotebook):
 
-    def __init__(self, parent, app):
+    def __init__(self, parent, app, style):
         self._app = app
-        style = fnb.FNB_NODRAG|fnb.FNB_HIDE_ON_SINGLE_TAB|fnb.FNB_VC8
-        fnb.FlatNotebook.__init__(self, parent, style=style)
-        self.Bind(fnb.EVT_FLATNOTEBOOK_PAGE_CLOSING, self.OnTabClosing)
-        self.Bind(fnb.EVT_FLATNOTEBOOK_PAGE_CHANGING, self.OnTabChanging)
-        self.Bind(fnb.EVT_FLATNOTEBOOK_PAGE_CHANGED, self.OnTabChanged)
+        self._notebook_style = style
+        # style = fnb.FNB_NODRAG|fnb.FNB_HIDE_ON_SINGLE_TAB|fnb.FNB_VC8
+        # fnb.FlatNotebook.__init__(self, parent, style=style)
+        aui.AuiNotebook.__init__(self, parent, agwStyle=self._notebook_style)
+        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.OnTabClosing)
+        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGING, self.OnTabChanging)
+        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnTabChanged)
         self._tab_closing = False
+        self._tab_state = None
         self._uncloseable = []
 
     def add_tab(self, tab, title, allow_closing=True):
@@ -78,14 +86,35 @@ class NoteBook(fnb.FlatNotebook):
     def OnTabChanging(self, event):
         if not self._tab_changed():
             return
-        oldtitle = self.GetPageText(event.GetOldSelection())
+        oldselect = event.GetOldSelection()
+        # oldtitle = None
+        try:
+            oldtitle = self.GetPageText(oldselect)
+            print("DEBUG: Tab name old=%s" % (oldtitle))
+        except Exception:
+            oldtitle = ""
         newindex = event.GetSelection()
-        if newindex <= self.GetPageCount() - 1:
-            newtitle = self.GetPageText(event.GetSelection())
-            self.GetPage(event.GetSelection()).SetFocus()
+
+        print("DEBUG: Tab counts=%d, newselect %d" % (self.GetPageCount(), newindex) )
+        #     newtitle = self.GetPageText(event.GetSelection())
+        #     self.GetPage(event.GetSelection()).SetFocus()
+        # else:
+        #     newtitle = None
+        newtitle = self.GetPageText(event.GetSelection())
+        print("DEBUG: Tab name new=%s" % (newtitle))
+        if self._tab_state is not None:
+            if self._tab_state == oldtitle + newtitle + str(newindex):
+                print("DEBUG: Tab state=%s" % (self._tab_state))
+                return
+            else:
+                self._tab_state = oldtitle + newtitle + str(newindex)
         else:
-            newtitle = None
+            self._tab_state = newtitle + str(newindex)
+        print("DEBUG: After Tab state=%s" % (self._tab_state))
+        # if newindex <= self.GetPageCount() - 1:
+        self.GetPage(event.GetSelection()).SetFocus()
         RideNotebookTabChanging(oldtab=oldtitle, newtab=newtitle).publish()
+        event.Skip()
 
     def OnTabChanged(self, event):
         if not self._tab_changed():
