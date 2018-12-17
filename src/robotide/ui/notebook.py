@@ -87,31 +87,19 @@ class NoteBook(aui.AuiNotebook):
         if not self._tab_changed():
             return
         oldselect = event.GetOldSelection()
-        # oldtitle = None
         try:
             oldtitle = self.GetPageText(oldselect)
-            print("DEBUG: Tab name old=%s" % (oldtitle))
         except Exception:
             oldtitle = ""
         newindex = event.GetSelection()
-
-        print("DEBUG: Tab counts=%d, newselect %d" % (self.GetPageCount(), newindex) )
-        #     newtitle = self.GetPageText(event.GetSelection())
-        #     self.GetPage(event.GetSelection()).SetFocus()
-        # else:
-        #     newtitle = None
         newtitle = self.GetPageText(event.GetSelection())
-        print("DEBUG: Tab name new=%s" % (newtitle))
         if self._tab_state is not None:
             if self._tab_state == oldtitle + newtitle + str(newindex):
-                print("DEBUG: Tab state=%s" % (self._tab_state))
                 return
             else:
                 self._tab_state = oldtitle + newtitle + str(newindex)
         else:
             self._tab_state = newtitle + str(newindex)
-        print("DEBUG: After Tab state=%s" % (self._tab_state))
-        # if newindex <= self.GetPageCount() - 1:
         self.GetPage(event.GetSelection()).SetFocus()
         RideNotebookTabChanging(oldtab=oldtitle, newtab=newtitle).publish()
         event.Skip()
