@@ -619,9 +619,11 @@ class ToolBar(aui.AuiToolBar):
         if wx.VERSION >= (3, 0, 3, ''):  # DEBUG wxPhoenix
             obj.AddTool(toolid, label, bitmap, bmpDisabled, kind,
                         shortHelp, longHelp)
-        else:
-            obj.AddLabelTool(toolid, label, bitmap, shortHelp=shortHelp,
-                             longHelp=longHelp)
+        else:  # DEBUG Was AddLabelTool for non AUI version
+            obj.AddTool(tool_id=toolid, label=label, bitmap=bitmap,
+                        disabled_bitmap=bmpDisabled, kind=wx.ITEM_NORMAL,
+                        short_help_string=shortHelp,
+                        long_help_string=longHelp, client_data=None)
 
     def _format_button_tooltip(self, action):
         tooltip = action.name.replace('&', '')
