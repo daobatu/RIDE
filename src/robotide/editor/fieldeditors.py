@@ -46,12 +46,12 @@ class ValueEditor(wx.Panel):
             sizer.Add(Label(self, label=self._label, size=(80, -1)), 0,
                       self._sizer_flags_for_label, 5)
         self._editor = self._get_text_ctrl()
-        # self._editor.SetDefaultStyle(wx.TextAttr(wx.TEXT_ATTR_ALL))
+        # self._editor.SetDefaultStyle(wx.TextAttr(wx.TEXT_ATTR_CHARACTER))
         self._editor.AppendText(value)
         sizer.Add(self._editor, 1, self._sizer_flags_for_editor, 3)
         self._sizer.Add(sizer, 1, wx.EXPAND)
         self._editor.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
-        # print("DEBUG: ValueEditor _create_editor: %s\n" % (self._editor.__repr__()))
+        print("DEBUG: ValueEditor _create_editor: %s\n" % (self._editor.__repr__()))
 
     def _get_text_ctrl(self):
         return wx.TextCtrl(self, size=(600, -1))
@@ -70,11 +70,13 @@ class ValueEditor(wx.Panel):
     def on_key_down(self, event):
         character = None
         keycode, control_down = event.GetKeyCode(), event.CmdDown()
-        # print("DEBUG: ValueEditor on_key_down: k=%s Ctrl=%s\n" % (keycode, control_down))
+        print("DEBUG: ValueEditor on_key_down: k=%s Ctrl=%s\n" % (keycode, control_down))
         if event.CmdDown() and event.GetKeyCode() == ord('1'):
             character = '$'
         elif event.CmdDown() and event.GetKeyCode() == ord('2'):
             character = '@'
+        elif event.CmdDown() and event.GetKeyCode() == ord('5'):  # DEBUG New
+            character = '&'
         if character:
             if len(self.get_value()) == 0:
                 self._editor.WriteText(character + "{}")
@@ -288,6 +290,7 @@ class _EditorGrid(GridEditor):
         self.SelectAll()
 
     def resize_columns(self, width):
+        print("DEBUG: Called resize coluumns, width=%d" % width)
         self.SetDefaultColSize(max(width / self.NumberCols, 100), True)
 
     def set_number_of_columns(self, columns):
