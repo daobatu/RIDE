@@ -61,6 +61,8 @@ def ctrl_or_cmd():
     # if IS_MAC:
         # DEBUG Ctrl-C, V Ctrl-space
         # return wx.ACCEL_CMD
+    if IS_MAC:
+        return wx.ACCEL_RAW_CTRL
     return wx.ACCEL_CTRL
 
 

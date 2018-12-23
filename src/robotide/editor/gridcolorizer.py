@@ -97,7 +97,6 @@ class ColorizationSettings(object):
         self._settings = settings
 
     def get_background_color(self, type):
-        print("DEBUG: called background: %s" % type)
         if not self._settings:
             return self.DEFAULT_BACKGROUND
         return self._get('background %s' % type)

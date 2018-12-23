@@ -252,13 +252,16 @@ class RideFrame(wx.Frame, RideEventHandler):
                           ToolbarPane().Top())
         self.actions = ActionRegisterer(mb, self.toolbar,
                                         ShortcutRegistry(self))
+        """
         ##### Test
         tb3 = self.testToolbar()
 
         self._mgr.AddPane(tb3,
                           aui.AuiPaneInfo().Name("tb3").Caption("Toolbar 3").
                           ToolbarPane().Top().Row(1).Position(1))
-
+        
+        ##### End Test
+        """
         # self._mgr.AddPane(self.CreateTreeControl(),
         #                  aui.AuiPaneInfo().Name("tree_content").
         #                  CenterPane().Hide().MinimizeButton(True))
@@ -266,7 +269,7 @@ class RideFrame(wx.Frame, RideEventHandler):
         self.tree = Tree(self, self.actions,
                          self._application.settings)
         #self.tree.SetMinSize(wx.Size(100, 200))
-        self.tree.SetMinSize(wx.Size(120, 180))
+        self.tree.SetMinSize(wx.Size(120, 200))
         self._mgr.AddPane(self.tree,
                           aui.AuiPaneInfo().Name("tree_content").
                           Caption("Test Suites").LeftDockable(True).
