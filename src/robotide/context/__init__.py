@@ -58,11 +58,8 @@ For more information, see project pages at
 
 
 def ctrl_or_cmd():
-    # if IS_MAC:
-        # DEBUG Ctrl-C, V Ctrl-space
-        # return wx.ACCEL_CMD
     if IS_MAC:
-        return wx.ACCEL_RAW_CTRL
+        return wx.ACCEL_CMD
     return wx.ACCEL_CTRL
 
 
@@ -155,7 +152,7 @@ SHORTCUT_KEYS = '''\
         <th><b>What it does</b></th>
     </tr>
     <tr>
-        <td>Ctrl-Space</td>
+        <td>Ctrl-Space or Alt-Space</td>
         <td>Suggestions and auto completion</td>
     </tr>
     <tr>
